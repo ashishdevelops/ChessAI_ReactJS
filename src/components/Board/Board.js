@@ -1,30 +1,39 @@
 import React from 'react'
 import Piece from '../Piece/Piece.js'
 import './Board.css'
-
+import Chess from 'chess.js'
 
 class Board extends React.Component {
 
     constructor(props){
       super(props);
-      this.state = {chosenPiece : '', prevSquare:''};
+      this.state = {chosenPiece : '', prevSquare:'', prevRef:null};
       this.referencesMap = new Map();
+      this.game = new Chess();
     }
 
     renderSquare(loc) {
       let sqrRef = React.createRef();
       return( 
         <div className='Square' onClick= {() => {
-          
-          if(this.state.chosenPiece != ''){
+
+          console.log(`prev: ${this.state.prevSquare.toLowerCase()}, End: ${loc.toLowerCase()}`);
+
+          if(this.state.chosenPiece != '' && this.game.move({from:this.state.prevSquare.toLowerCase(), to:loc.toLowerCase()})){
             sqrRef.current.setState({piece:this.state.chosenPiece})
             this.setState({chosenPiece:''});
-            console.log(this.referencesMap);
-          }else{
+            this.setState({prevSquare: ''})
+            
+          }else if(this.state.chosenPiece == ''){
             this.setState({chosenPiece:sqrRef.current.state.piece});
             this.setState({prevSquare: loc})
-            sqrRef.current.setState({piece:''})
+            this.setState({piece:''})
+          }else{
+            console.log('invalid ')
+            this.setState({chosenPiece:''})
+            this.setState({prevSquare:''})
           }
+          console.log(this.game.ascii())
           
         }}>
           <Piece value={loc} ref={sqrRef}/>
