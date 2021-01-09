@@ -1,0 +1,37 @@
+.Board{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+ 
+  transform: translate(-50%,-50%);
+}
+
+.Square {
+    background: #fff;
+    border: 1px solid #999;
+    float: left;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 45px;
+    height: 45px;
+    margin-right: -1px;
+    margin-top: -1px;
+    padding: 0;
+    text-align: center;
+    width: 45px;
+}
+
+.board-row:after {
+  clear: both;
+  content: "";
+  display: table;
+}
+
+.board-row:nth-child(2n+1) .Square:nth-child(2n){
+  background:#999;
+}
+
+.board-row:nth-child(2n) .Square:nth-child(2n+1){
+  background:#999;
+}
+
