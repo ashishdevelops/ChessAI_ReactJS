@@ -22,8 +22,8 @@ class Board extends React.Component {
        });
       console.log(this)
       
-      this.chosenPiece = '';
-      this.prevSquare = '';
+      this.chosenPiece = null;
+      this.prevSquare = null;
       this.prevRef = null;
       this.referencesMap = new Map();
       this.game = new Chess();
@@ -32,25 +32,51 @@ class Board extends React.Component {
     renderSquare(loc) {
       let sqrRef = this[`${loc}_ref`];
       return( 
-        <div className='Square' onClick= {() => {
+        <div id={loc} className='Square' onClick= {() => {
 
-          console.log(`prev: ${this.prevSquare.toLowerCase()}, End: ${loc.toLowerCase()}`);
+          console.log(`prev: ${this.prevSquare}, End: ${loc}`);
           console.log(`chosen piece: ${this.chosenPiece}`);
 
-          if(this.chosenPiece != '' && this.game.move({from:this.prevSquare.toLowerCase(), to:loc.toLowerCase()})){
+          if(this.chosenPiece != null && this.prevSquare != null && this.game.move({from:this.prevSquare.toLowerCase(), to:loc.toLowerCase()})){
             sqrRef.current.setState({piece:this.chosenPiece})
             this[`${this.prevSquare}_ref`].current.setState({piece:''});
-            this.chosenPiece = '';
-            this.prevSquare = '';
-          }else if(this.chosenPiece == ''){
+
+            //castleing
+            if(this.prevSquare == 'E1' && loc == 'G1'){
+              //white king side
+              this["F1_ref"].current.setState({piece:'R'});
+              this["H1_ref"].current.setState({piece:''});
+            }
+            else if(this.prevSquare == 'E1' && loc == 'C1'){
+              //white queen side
+              this["D1_ref"].current.setState({piece:'R'});
+              this["A1_ref"].current.setState({piece:''});
+            }
+            else if(this.prevSquare == 'E8' && loc == 'G8'){
+              //black king side
+              this["F8_ref"].current.setState({piece:'r'});
+              this["H8_ref"].current.setState({piece:''});
+            }
+            else if(this.prevSquare == 'E8' && loc == 'C8'){
+              //white queen side
+              this["D8_ref"].current.setState({piece:'r'});
+              this["A8_ref"].current.setState({piece:''});
+            }
+            
+
+            document.getElementById(this.prevSquare).style.cssText = 'background: null;'
+
+            this.chosenPiece = null;
+            this.prevSquare = null;
+          }else if(this.chosenPiece == null){
             this.chosenPiece = sqrRef.current.state.piece;
             this.prevSquare = loc;
-            //this.prevRef = sqrRef;
-            //sqrRef.current.setState({piece:''})
+            document.getElementById(loc).style.cssText = 'background: darkseagreen;'
           }else{
             console.log('invalid ');
-            this.chosenPiece = '';
-            this.prevSquare= '';
+            document.getElementById(this.prevSquare).style.cssText = 'background: null;'
+            this.prevSquare = null;
+            this.chosenPiece = null;
           }
           console.log(this.game.ascii())
           console.log(this.prevRef)
