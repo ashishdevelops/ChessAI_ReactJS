@@ -1,1 +1,1 @@
-# Creating a playable Chess AI in ReactJS!
+# A playable Chess AI in ReactJS!
