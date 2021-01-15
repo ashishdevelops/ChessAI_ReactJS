@@ -6,7 +6,7 @@
 
 ## To Clone
 
-```
+```bash
 git clone git@github.com:ashishdevelops/ChessAI_ReactJS.git
 cd ChessAI_ReactJS
 npm install chess.js
