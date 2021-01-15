@@ -4,6 +4,14 @@
 
 <b>UI Framework</b>: ReactJS
 
+## To Clone
+
+`
+git clone git@github.com:ashishdevelops/ChessAI_ReactJS.git
+cd ChessAI_ReactJS
+npm install chess.js
+`
+
 ## Problems Encountered
 * Rendering moves
 * Optimizing AI move algorithm (tree recursive algorithm)
