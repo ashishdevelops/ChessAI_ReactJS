@@ -4,5 +4,5 @@
 
 <b>UI Framework</b>: ReactJS
 
-# Demo (gif):
+## Demo (gif):
 ![chess ai demo](demo.gif)
