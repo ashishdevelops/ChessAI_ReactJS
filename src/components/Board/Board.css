@@ -13,12 +13,12 @@
     font-size: 24px;
     font-weight: bold;
     line-height: 45px;
-    height: 45px;
+    height: 65px;
     margin-right: -1px;
     margin-top: -1px;
     padding: 0;
     text-align: center;
-    width: 45px;
+    width: 65px;
 }
 
 .board-row:after {

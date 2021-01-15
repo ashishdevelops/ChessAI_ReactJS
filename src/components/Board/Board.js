@@ -1,4 +1,5 @@
 import React from 'react'
+import ChessAI from '../../ChessAI.js'
 import Piece from '../Piece/Piece.js'
 import './Board.css'
 import Chess from 'chess.js'
@@ -7,7 +8,6 @@ class Board extends React.Component {
 
     constructor(props){
       super(props);
-      //this.state = {chosenPiece : '', prevSquare:'', prevRef:null};
       this.squares = ['A8','B8','C8','D8','E8','F8','G8','H8',
             'A7','B7','C7','D7','E7','F7','G7','H7',
             'A6','B6','C6','D6','E6','F6','G6','H6',
@@ -20,69 +20,111 @@ class Board extends React.Component {
       this.squares.forEach(thing => {
         this[`${thing}_ref`] = React.createRef()
        });
-      console.log(this)
       
       this.chosenPiece = null;
       this.prevSquare = null;
-      this.prevRef = null;
-      this.referencesMap = new Map();
       this.game = new Chess();
+      this.chess_ai = new ChessAI(this.game)
+      this.turn = 'w'
+    }
+
+    player_move(loc){
+      if(this.chosenPiece != null && this.prevSquare != null && this.game.move({from:this.prevSquare.toLowerCase(), to:loc.toLowerCase(), promotion: 'q'})){
+        this[`${loc}_ref`].current.setState({piece:this.chosenPiece})
+        this[`${this.prevSquare}_ref`].current.setState({piece:''});
+
+        //castleing
+        if(this.prevSquare === 'E1' && loc === 'G1'){
+          //white king side
+          this["F1_ref"].current.setState({piece:'R'});
+          this["H1_ref"].current.setState({piece:''});
+        }
+        else if(this.prevSquare === 'E1' && loc === 'C1'){
+          //white queen side
+          this["D1_ref"].current.setState({piece:'R'});
+          this["A1_ref"].current.setState({piece:''});
+        }
+        else if(this.prevSquare === 'E8' && loc === 'G8'){
+          //black king side
+          this["F8_ref"].current.setState({piece:'r'});
+          this["H8_ref"].current.setState({piece:''});
+        }
+        else if(this.prevSquare === 'E8' && loc ==='C8'){
+          //white queen side
+          this["D8_ref"].current.setState({piece:'r'});
+          this["A8_ref"].current.setState({piece:''});
+        }
+        
+
+        document.getElementById(this.prevSquare).style.cssText = 'background: null;'
+        //document.getElementById(loc).style.cssText = 'background: darkgreen;'
+        console.log(this.game.ascii())
+        this.chosenPiece = null;
+        this.prevSquare = null;
+
+        return true;
+
+      }else if(this.chosenPiece == null){
+        this.chosenPiece = this[`${loc}_ref`].current.state.piece;
+        this.prevSquare = loc;
+        document.getElementById(loc).style.cssText = 'background: darkseagreen;'
+      }else{
+        console.log('invalid ');
+        document.getElementById(this.prevSquare).style.cssText = 'background: null;'
+        this.prevSquare = null;
+        this.chosenPiece = null;
+      }
+      return false;
+    }
+
+    renderMove(pieceChose,initSqr, endSqr){
+      console.log('playing',`${pieceChose}`, `${initSqr}`,`${endSqr}`)
+      if(this.game.move({from:initSqr.toLowerCase(), to:endSqr.toLowerCase(), promotion: 'q'})){
+        console.log('played')
+        this[`${endSqr}_ref`].current.setState({piece:pieceChose})
+        console.log(this[`${endSqr}_ref`].current)
+        this[`${initSqr}_ref`].current.setState({piece:''});
+
+        //castleing
+        if(initSqr === 'E1' && endSqr === 'G1'){
+          //white king side
+          this["F1_ref"].current.setState({piece:'R'});
+          this["H1_ref"].current.setState({piece:''});
+        }
+        else if(initSqr === 'E1' && endSqr === 'C1'){
+          //white queen side
+          this["D1_ref"].current.setState({piece:'R'});
+          this["A1_ref"].current.setState({piece:''});
+        }
+        else if(initSqr === 'E8' && endSqr === 'G8'){
+          //black king side
+          this["F8_ref"].current.setState({piece:'r'});
+          this["H8_ref"].current.setState({piece:''});
+        }
+        else if(initSqr === 'E8' && endSqr ==='C8'){
+          //white queen side
+          this["D8_ref"].current.setState({piece:'r'});
+          this["A8_ref"].current.setState({piece:''});
+        }
+      }else{
+        console.log('AI_invalid')
+      }
     }
 
     renderSquare(loc) {
-      let sqrRef = this[`${loc}_ref`];
       return( 
         <div id={loc} className='Square' onClick= {() => {
-
-          console.log(`prev: ${this.prevSquare}, End: ${loc}`);
-          console.log(`chosen piece: ${this.chosenPiece}`);
-
-          if(this.chosenPiece != null && this.prevSquare != null && this.game.move({from:this.prevSquare.toLowerCase(), to:loc.toLowerCase()})){
-            sqrRef.current.setState({piece:this.chosenPiece})
-            this[`${this.prevSquare}_ref`].current.setState({piece:''});
-
-            //castleing
-            if(this.prevSquare == 'E1' && loc == 'G1'){
-              //white king side
-              this["F1_ref"].current.setState({piece:'R'});
-              this["H1_ref"].current.setState({piece:''});
-            }
-            else if(this.prevSquare == 'E1' && loc == 'C1'){
-              //white queen side
-              this["D1_ref"].current.setState({piece:'R'});
-              this["A1_ref"].current.setState({piece:''});
-            }
-            else if(this.prevSquare == 'E8' && loc == 'G8'){
-              //black king side
-              this["F8_ref"].current.setState({piece:'r'});
-              this["H8_ref"].current.setState({piece:''});
-            }
-            else if(this.prevSquare == 'E8' && loc == 'C8'){
-              //white queen side
-              this["D8_ref"].current.setState({piece:'r'});
-              this["A8_ref"].current.setState({piece:''});
-            }
-            
-
-            document.getElementById(this.prevSquare).style.cssText = 'background: null;'
-
-            this.chosenPiece = null;
-            this.prevSquare = null;
-          }else if(this.chosenPiece == null){
-            this.chosenPiece = sqrRef.current.state.piece;
-            this.prevSquare = loc;
-            document.getElementById(loc).style.cssText = 'background: darkseagreen;'
-          }else{
-            console.log('invalid ');
-            document.getElementById(this.prevSquare).style.cssText = 'background: null;'
-            this.prevSquare = null;
-            this.chosenPiece = null;
-          }
-          console.log(this.game.ascii())
-          console.log(this.prevRef)
+          console.log('click')
           
+          if(this.player_move(loc) && !this.game.game_over()){
+            let AI_move = this.chess_ai.move(3, true)
+            this.renderMove(AI_move['piece'],AI_move['from'],AI_move['to']);
+
+          }else if(this.game.game_over()){
+            console.log('game over lol')
+          }
         }}>
-          <Piece value={loc} ref={sqrRef}/>
+          <Piece value={loc} ref={this[`${loc}_ref`]}/>
         </div>
         )
     }

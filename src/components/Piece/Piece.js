@@ -15,6 +15,7 @@ import white_rook from '../../images/white_rook.svg'
 import white_bishop from '../../images/white_bishop.svg'
 import white_knight from '../../images/white_knight.svg'
 import white_pawn from '../../images/white_pawn.svg'
+import no_piece from '../../images/1x1.png'
 
 
 
@@ -56,22 +57,20 @@ class Piece extends React.Component{
         }
 
         //Queen
-        else if(this.props.value == 'D1'){
+        else if(this.props.value === 'D1'){
             this.state = {piece: 'Q'}; //white
         }
-        else if(this.props.value == 'D8'){
+        else if(this.props.value === 'D8'){
             this.state = {piece: 'q'}; //white
         }
 
         //King
-        else if(this.props.value == 'E1'){
+        else if(this.props.value === 'E1'){
             this.state = {piece: 'K'}; //white
         }
-        else if(this.props.value == 'E8'){
+        else if(this.props.value === 'E8'){
             this.state = {piece: 'k'}; //white
         }
-
-
 
         else{
             this.state = {piece: ''};
@@ -80,46 +79,46 @@ class Piece extends React.Component{
     }
 
     render(){
-      let img_src = "";
-      if(this.state.piece == 'P'){
+      let img_src = no_piece;
+      if(this.state.piece === 'P'){
         img_src = white_pawn;
       }
-      else if(this.state.piece == 'p'){
+      else if(this.state.piece === 'p'){
         img_src = black_pawn;
       }
-      else if(this.state.piece == 'B'){
+      else if(this.state.piece === 'B'){
         img_src = white_bishop;
       }
-      else if(this.state.piece == 'b'){
+      else if(this.state.piece === 'b'){
         img_src = black_bishop;
       }
-      else if(this.state.piece == 'N'){
+      else if(this.state.piece === 'N'){
         img_src = white_knight;
       }
-      else if(this.state.piece == 'n'){
+      else if(this.state.piece === 'n'){
         img_src = black_knight;
       }
-      else if(this.state.piece == 'R'){
+      else if(this.state.piece === 'R'){
         img_src = white_rook;
       }
-      else if(this.state.piece == 'r'){
+      else if(this.state.piece === 'r'){
         img_src = black_rook;
       }
-      else if(this.state.piece == 'K'){
+      else if(this.state.piece === 'K'){
         img_src = white_king;
       }
-      else if(this.state.piece == 'k'){
+      else if(this.state.piece === 'k'){
         img_src = black_king;
       }
-      else if(this.state.piece == 'Q'){
+      else if(this.state.piece === 'Q'){
         img_src = white_queen;
       }
-      else if(this.state.piece == 'q'){
+      else if(this.state.piece === 'q'){
         img_src = black_queen;
       }
 
       return(
-          <img src={img_src} alt={this.state.piece}/>
+          <img src={img_src} style={{ height: 65, width: 65 }} alt={this.state.piece}/>
       )
     }
 }
