@@ -3,3 +3,6 @@
 <b>Language</b>: Javascript
 
 <b>UI Framework</b>: ReactJS
+
+#Demo (gif):
+![chess ai demo](demo.gif)

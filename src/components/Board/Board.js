@@ -25,7 +25,7 @@ class Board extends React.Component {
       this.prevSquare = null;
       this.game = new Chess();
       this.chess_ai = new ChessAI(this.game)
-      this.turn = 'w'
+      this.state = {turn: 'w', message: "shall we play?"}
     }
 
     player_move(loc){
@@ -61,7 +61,7 @@ class Board extends React.Component {
         console.log(this.game.ascii())
         this.chosenPiece = null;
         this.prevSquare = null;
-
+        this.setState({turn: 'b'});
         return true;
 
       }else if(this.chosenPiece == null){
@@ -116,12 +116,19 @@ class Board extends React.Component {
         <div id={loc} className='Square' onClick= {() => {
           console.log('click')
           
-          if(this.player_move(loc) && !this.game.game_over()){
+          if(!this.game.game_over()){
+            this.player_move(loc);
+          }else if(this.game.game_over()){
+            this.setState({message: "Thats game. You played that well :)"})
+          }
+        }} onLoad={()=>{
+          console.log('change')
+          if(this.state.turn === 'b'){
+            this.setState({message: "thinking..."})
             let AI_move = this.chess_ai.move(3, true)
             this.renderMove(AI_move['piece'],AI_move['from'],AI_move['to']);
-
-          }else if(this.game.game_over()){
-            console.log('game over lol')
+            this.setState({turn : 'w'})
+            this.setState({message: "your turn. How will you face that move?"})
           }
         }}>
           <Piece value={loc} ref={this[`${loc}_ref`]}/>
@@ -129,9 +136,23 @@ class Board extends React.Component {
         )
     }
 
+    ai_move_handler(){
+      console.log('change')
+      if(this.state.turn === 'b'){
+        
+        let AI_move = this.chess_ai.move(3, true)
+        this.renderMove(AI_move['piece'],AI_move['from'],AI_move['to']);
+        
+      }
+    }
+
+
+
     render() {
       return (
-        <div className='Board'>
+        <div>
+          <h2 className='bot_text'>{this.state.message}</h2>
+          <div className='Board' onChange={this.ai_move_handler}>
           <div className='board-row'>
             {this.renderSquare('A8')}
             {this.renderSquare('B8')}
@@ -220,6 +241,8 @@ class Board extends React.Component {
             {this.renderSquare('H1')}
           </div>
         </div>
+        </div>
+        
       );
     }
   }
